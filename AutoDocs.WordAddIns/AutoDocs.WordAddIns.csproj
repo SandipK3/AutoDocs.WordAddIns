@@ -68,19 +68,19 @@
   <ItemGroup>
     <Compile Include="MyAddin.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SampleControl.cs">
+    <Compile Include="AutoDocs365TaskPane.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="SampleControl.Designer.cs">
-      <DependentUpon>SampleControl.cs</DependentUpon>
+    <Compile Include="AutoDocs365TaskPane.Designer.cs">
+      <DependentUpon>AutoDocs365TaskPane.cs</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="SampleControl.resx">
-      <DependentUpon>SampleControl.cs</DependentUpon>
+    <EmbeddedResource Include="AutoDocs365TaskPane.resx">
+      <DependentUpon>AutoDocs365TaskPane.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

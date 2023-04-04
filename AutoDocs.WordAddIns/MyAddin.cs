@@ -26,25 +26,62 @@ namespace AutoDocs.WordAddIns
     [ProgId("AutoDocs.WordAddIns.MyAddin")]
     [COMAddin("MyAddin", "Addin description.", LoadBehavior.LoadAtStartup)]
     //[CustomPane(typeof(SampleControl), "AutoDocs WordAddIns", true, PaneDockPosition.msoCTPDockPositionTop, PaneDockPositionRestrict.msoCTPDockPositionRestrictNoVertical, 60, 60)]
-    public class MyAddin : Word.Tools.COMAddin, IDisposable, ICustomTaskPaneConsumer
+    public class MyAddin : Word.Tools.COMAddin, IDisposable
     {
-        private static SampleControl _sampleControl;
+        private static AutoDocs365TaskPane _sampleControl;
         private bool _disposed = false;
         private static readonly string _prodId = "AutoDocs.TaskPaneAddin";
+        ICTPFactory _ctpFactory = null;
+        _CustomTaskPane taskPane = null;
 
         private static Word.Application _wordApplication;
-        internal static Word.Application Application { get { return _wordApplication; } }
+        internal static Word.Application WordApplication { get { return _wordApplication; } }
         public MyAddin()
         {
             this.OnConnection += MyAddin_OnConnection;
+            this.OnDisconnection += MyAddin_OnDisconnection;
+        }
+
+        private void MyAddin_OnDisconnection(ext_DisconnectMode removeMode, ref Array custom)
+        {
+            _ctpFactory.Dispose();
+            _ctpFactory = null;
+
+            if (null != taskPane)
+            {
+                taskPane.Dispose();
+                taskPane = null;
+            }
         }
 
         private void MyAddin_OnConnection(object application, ext_ConnectMode connectMode, object addInInst, ref Array custom)
         {
-            _wordApplication.DocumentOpenEvent += Application_DocumentOpenEvent;
+            _wordApplication = application as Word.Application;
+            WordApplication.DocumentOpenEvent += WordApplication_DocumentOpenEvent;
+            WordApplication.DocumentChangeEvent += WordApplication_DocumentChangeEvent;
+            WordApplication.DocumentBeforeCloseEvent += WordApplication_DocumentBeforeCloseEvent;
+            WordApplication.DocumentBeforePrintEvent += WordApplication_DocumentBeforePrintEvent;
+            WordApplication.DocumentSyncEvent += WordApplication_DocumentSyncEvent;
         }
 
-        private void Application_DocumentOpenEvent(Document doc)
+        private void WordApplication_DocumentSyncEvent(Document doc, Office.Enums.MsoSyncEventType syncEventType)
+        {
+        }
+
+        private void WordApplication_DocumentBeforePrintEvent(Document doc, ref bool cancel)
+        {
+        }
+
+        private void WordApplication_DocumentBeforeCloseEvent(Document doc, ref bool cancel)
+        {
+        }
+
+        private void WordApplication_DocumentChangeEvent()
+        {
+            CreateAutoDocs365TaskPane(); // Create an AutoDocs 365 Custom Task Pane if one doesn't already exist
+        }
+
+        private void WordApplication_DocumentOpenEvent(Document doc)
         {
             using (doc)
             {
@@ -70,22 +107,33 @@ namespace AutoDocs.WordAddIns
             _disposed = true;
         }
 
-        public void CTPFactoryAvailable(Microsoft.Office.Core.ICTPFactory CTPFactoryInst)
+        public override void CTPFactoryAvailable(object CTPFactoryInst)
         {
+            _ctpFactory = new ICTPFactory(this.Application, CTPFactoryInst);
+        }
+
+        private void CreateAutoDocs365TaskPane()
+        {
+            if (null == _ctpFactory)
+                return;
+
+            if (null != taskPane)
+                return;
+
             try
             {
-                Office.ICTPFactory ctpFactory = new NetOffice.OfficeApi.ICTPFactory(_wordApplication, CTPFactoryInst);
-                Office._CustomTaskPane taskPane = ctpFactory.CreateCTP(typeof(MyAddin).Assembly.GetName().Name + ".SampleControl", "AutoDocs TaskPane", Type.Missing);
-                taskPane.DockPosition = (Office.Enums.MsoCTPDockPosition)MsoCTPDockPosition.msoCTPDockPositionRight;
-                taskPane.Width = 300;
+                taskPane = _ctpFactory.CreateCTP("AutoDocs.WordAddIns.AutoDocs365TaskPane", "AutoDocs 365");
+                TaskPaneInfo tpi = TaskPanes.Add(typeof(AutoDocs365TaskPane), "AutoDocs 365");
+                tpi.DockPosition = (Office.Enums.MsoCTPDockPosition)MsoCTPDockPosition.msoCTPDockPositionLeft;
+                tpi.Width = 460;
+                tpi.Visible = true;
+
+                taskPane.DockPosition = (Office.Enums.MsoCTPDockPosition)MsoCTPDockPosition.msoCTPDockPositionLeft;
+                taskPane.Width = 460;
                 taskPane.Visible = true;
-                _sampleControl = taskPane.ContentControl as SampleControl;
-                ctpFactory.Dispose();
             }
-            catch (Exception exception)
+            catch (Exception ex)
             {
-                string message = string.Format("An error occured.{0}{0}{1}", Environment.NewLine, exception.Message);
-                MessageBox.Show(message, _prodId, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
     }

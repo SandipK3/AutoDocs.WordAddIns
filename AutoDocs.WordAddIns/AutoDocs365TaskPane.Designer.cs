@@ -1,6 +1,6 @@
 ﻿namespace AutoDocs.WordAddIns
 {
-    partial class SampleControl
+    partial class AutoDocs365TaskPane
     {
         /// <summary> 
         /// Required designer variable.
