@@ -1,23 +1,13 @@
-﻿using Microsoft.Office.Core;
+﻿using NetOffice.OfficeApi;
+using NetOffice.OfficeApi.Enums;
+using NetOffice.OfficeApi.Tools;
 using NetOffice.Tools;
 using NetOffice.WordApi;
 using NetOffice.WordApi.Tools;
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
-using NetOffice.OfficeApi;
 using Office = NetOffice.OfficeApi;
-using System.Windows.Forms;
-using ICTPFactory = NetOffice.OfficeApi.ICTPFactory;
-using _CustomTaskPane = NetOffice.OfficeApi._CustomTaskPane;
-using NetOffice.OfficeApi.Tools;
 using Word = NetOffice.WordApi;
-using Microsoft.Win32;
-using NetOffice.VBIDEApi;
-using System.Reflection;
 
 namespace AutoDocs.WordAddIns
 {
@@ -25,7 +15,6 @@ namespace AutoDocs.WordAddIns
     [Guid("f7407235-8887-462b-94be-e916fd95b9b9")]
     [ProgId("AutoDocs.WordAddIns.MyAddin")]
     [COMAddin("MyAddin", "Addin description.", LoadBehavior.LoadAtStartup)]
-    //[CustomPane(typeof(SampleControl), "AutoDocs WordAddIns", true, PaneDockPosition.msoCTPDockPositionTop, PaneDockPositionRestrict.msoCTPDockPositionRestrictNoVertical, 60, 60)]
     public class MyAddin : Word.Tools.COMAddin, IDisposable
     {
         private static AutoDocs365TaskPane _sampleControl;
@@ -124,11 +113,11 @@ namespace AutoDocs.WordAddIns
             {
                 taskPane = _ctpFactory.CreateCTP("AutoDocs.WordAddIns.AutoDocs365TaskPane", "AutoDocs 365");
                 TaskPaneInfo tpi = TaskPanes.Add(typeof(AutoDocs365TaskPane), "AutoDocs 365");
-                tpi.DockPosition = (Office.Enums.MsoCTPDockPosition)MsoCTPDockPosition.msoCTPDockPositionLeft;
+                tpi.DockPosition = MsoCTPDockPosition.msoCTPDockPositionLeft;
                 tpi.Width = 460;
                 tpi.Visible = true;
 
-                taskPane.DockPosition = (Office.Enums.MsoCTPDockPosition)MsoCTPDockPosition.msoCTPDockPositionLeft;
+                taskPane.DockPosition = MsoCTPDockPosition.msoCTPDockPositionLeft;
                 taskPane.Width = 460;
                 taskPane.Visible = true;
             }
