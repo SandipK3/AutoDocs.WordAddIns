@@ -124,16 +124,18 @@ namespace AutoDocs.WordAddIns
             {
                 taskPane = _ctpFactory.CreateCTP("AutoDocs.WordAddIns.AutoDocs365TaskPane", "AutoDocs 365");
                 TaskPaneInfo tpi = TaskPanes.Add(typeof(AutoDocs365TaskPane), "AutoDocs 365");
-                tpi.DockPosition = (Office.Enums.MsoCTPDockPosition)MsoCTPDockPosition.msoCTPDockPositionLeft;
-                tpi.Width = 460;
+                tpi.DockPosition = (Office.Enums.MsoCTPDockPosition)MsoCTPDockPosition.msoCTPDockPositionRight;
+                tpi.Width = 350;
                 tpi.Visible = true;
 
-                taskPane.DockPosition = (Office.Enums.MsoCTPDockPosition)MsoCTPDockPosition.msoCTPDockPositionLeft;
-                taskPane.Width = 460;
+                taskPane.DockPosition = (Office.Enums.MsoCTPDockPosition)MsoCTPDockPosition.msoCTPDockPositionRight;
+                taskPane.Width = 350;
                 taskPane.Visible = true;
             }
             catch (Exception ex)
             {
+                string message = string.Format("An error occured.{0}{0}{1}", Environment.NewLine, ex.Message);
+                MessageBox.Show(message, _prodId, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
     }
