@@ -136,6 +136,8 @@ namespace AutoDocs.WordAddIns
             }
             catch (Exception ex)
             {
+                string message = string.Format("An error occured.{0}{0}{1}", Environment.NewLine, ex.Message);
+                MessageBox.Show(message, _prodId, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 

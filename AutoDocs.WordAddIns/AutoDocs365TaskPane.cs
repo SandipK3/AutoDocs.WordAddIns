@@ -55,6 +55,52 @@ namespace AutoDocs.WordAddIns
             }
             catch (Exception ex)
             {
+                string message = string.Format("An error occured.{0}{0}{1}", Environment.NewLine, ex.Message);
+                MessageBox.Show(message, "AutoDocs.TaskPaneAddin", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void btnTemplate_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                Word.Document doc = MyAddin.WordApplication.ActiveDocument;
+                if (string.IsNullOrEmpty(doc.Content.Text) || string.IsNullOrWhiteSpace(doc.Content.Text))
+                {
+                    MessageBox.Show("Document Template can not be blank!!", "AutoDocs.TaskPaneAddin", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                else
+                {
+
+                }
+                
+            }
+            catch (Exception ex)
+            {
+                string message = string.Format("An error occured.{0}{0}{1}", Environment.NewLine, ex.Message);
+                MessageBox.Show(message, "AutoDocs.TaskPaneAddin", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void btnDataField_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                Word.Document doc = MyAddin.WordApplication.ActiveDocument;
+                if (string.IsNullOrEmpty(doc.Content.Text) || string.IsNullOrWhiteSpace(doc.Content.Text))
+                {
+                    MessageBox.Show("Document Template can not be blank!!", "AutoDocs.TaskPaneAddin", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                else
+                {
+
+                }
+
+            }
+            catch (Exception ex)
+            {
+                string message = string.Format("An error occured.{0}{0}{1}", Environment.NewLine, ex.Message);
+                MessageBox.Show(message, "AutoDocs.TaskPaneAddin", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
     }
