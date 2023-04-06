@@ -3,9 +3,12 @@ using NetOffice.OfficeApi.Enums;
 using NetOffice.OfficeApi.Tools;
 using NetOffice.Tools;
 using NetOffice.WordApi;
+using NetOffice.WordApi.Enums;
 using NetOffice.WordApi.Tools;
 using System;
+using System.Drawing;
 using System.Runtime.InteropServices;
+using System.Windows.Forms;
 using Office = NetOffice.OfficeApi;
 using Word = NetOffice.WordApi;
 
@@ -15,6 +18,7 @@ namespace AutoDocs.WordAddIns
     [Guid("f7407235-8887-462b-94be-e916fd95b9b9")]
     [ProgId("AutoDocs.WordAddIns.MyAddin")]
     [COMAddin("MyAddin", "Addin description.", LoadBehavior.LoadAtStartup)]
+    [CustomUI("RibbonUI.xml", true)]
     public class MyAddin : Word.Tools.COMAddin, IDisposable
     {
         private static AutoDocs365TaskPane _sampleControl;
@@ -30,6 +34,8 @@ namespace AutoDocs.WordAddIns
             this.OnConnection += MyAddin_OnConnection;
             this.OnDisconnection += MyAddin_OnDisconnection;
         }
+
+        #region Event Handlers
 
         private void MyAddin_OnDisconnection(ext_DisconnectMode removeMode, ref Array custom)
         {
@@ -53,7 +59,7 @@ namespace AutoDocs.WordAddIns
             WordApplication.DocumentSyncEvent += WordApplication_DocumentSyncEvent;
         }
 
-        private void WordApplication_DocumentSyncEvent(Document doc, Office.Enums.MsoSyncEventType syncEventType)
+        private void WordApplication_DocumentSyncEvent(Document doc, MsoSyncEventType syncEventType)
         {
         }
 
@@ -79,6 +85,10 @@ namespace AutoDocs.WordAddIns
             }
         }
 
+        #endregion
+
+        #region IDisposable
+
         public void Dispose() => Dispose(true);
         protected virtual void Dispose(bool disposing)
         {
@@ -95,6 +105,9 @@ namespace AutoDocs.WordAddIns
 
             _disposed = true;
         }
+
+        #endregion 
+
 
         public override void CTPFactoryAvailable(object CTPFactoryInst)
         {
@@ -124,6 +137,151 @@ namespace AutoDocs.WordAddIns
             catch (Exception ex)
             {
             }
+        }
+
+        #region Ribbon Customization
+
+        public Bitmap RibbonLoadImage(string imageName)
+        {
+            switch (imageName)
+            {
+                case "section16x16.png":
+                    return new Bitmap(Properties.Resources.SectionSymbol16x16);
+            }
+            return null;
+        
+        }
+
+        public Bitmap GetImage(IRibbonControl control)
+        {
+            if (null == control)
+                return null;
+
+            switch (control.Id)
+            {
+                case "section16x16.png":
+                    return new Bitmap(Properties.Resources.SectionSymbol16x16);
+                default:
+                    return null;
+            }
+        }
+
+        public bool IsContentLibraryVisible(IRibbonControl control)
+        {
+            return true;
+        }
+
+        public bool IsTemplateLibraryVisible(IRibbonControl control)
+        {
+            return true;
+        }
+
+        public bool IsAutoDocsEnterpriseVisible(IRibbonControl control)
+        {
+            return true;
+        }
+                
+        public bool IsAutoDocs365Admin(IRibbonControl control)
+        {
+            return true;
+        }
+        #endregion
+
+        public void InsertSectionSymbolClick(IRibbonControl control)
+        {
+            if (null == control)
+                return;
+
+            InsertCharacter("Section Symbol", "\u00A7");
+        }
+
+        public void InsertCharacter(string characterName, string character)
+        {
+            if (null == WordApplication.ActiveDocument)
+                return;
+
+            if ((WordApplication.Selection.End - WordApplication.Selection.Start) > 1)
+            {
+                MessageBox.Show(string.Format("You must have an insertion point selection in the document template to insert the {0} character.", characterName));
+                return;
+            }
+
+            if (WordApplication.Selection.End == WordApplication.Selection.Start)
+            {
+                WordApplication.Selection.InsertAfter(character);
+            }
+            else
+            {
+                WordApplication.Selection.Text = character;
+            }
+
+            WordApplication.Selection.Collapse(WdCollapseDirection.wdCollapseEnd);
+        }
+
+        // If we create a Plugin Interface for the various AutoDocs 365 tools, we might use a single onAction method and then pass the IRibbonControl instance to the plugin manager to dispatch the command to all the listening plugins to decide who needs to process the message. This would allow us to have containment for each application in a separate component instead of building one large monolithic app.
+        public void AutoDocs365RibbonButtonClick(IRibbonControl control)
+        {
+            // Route this click message to the Plugin Manager to notify listening plugins that a button was clicked and give them an opportunity to handle the message
+        }
+
+        public void SearchContentLibraryButtonClick(IRibbonControl control)
+        {
+            MessageBox.Show(string.Format("{0} button clicked.", control.Id));
+        }
+
+        public void SubmitContentLibraryButtonClick(IRibbonControl control)
+        {
+            MessageBox.Show(string.Format("{0} button clicked.", control.Id));
+        }
+
+        public void ContentManagementContentLibraryButtonClick(IRibbonControl control)
+        {
+            MessageBox.Show(string.Format("{0} button clicked.", control.Id));
+        }
+
+        public void ContentLibrarySettingsButtonClick(IRibbonControl control)
+        {
+            MessageBox.Show(string.Format("{0} button clicked.", control.Id));
+        }
+
+        public void SearchTemplateLibraryButtonClick(IRibbonControl control)
+        {
+            MessageBox.Show(string.Format("{0} button clicked.", control.Id));
+        }
+
+        public void TemplateLibraryInsertDataField(IRibbonControl control)
+        {
+            MessageBox.Show(string.Format("{0} button clicked.", control.Id));
+        }
+
+        public void TemplateLibraryConditionalContent(IRibbonControl control)
+        {
+            MessageBox.Show(string.Format("{0} button clicked.", control.Id));
+        }
+
+        public void ContentManagementTemplateLibraryButtonClick(IRibbonControl control)
+        {
+            MessageBox.Show(string.Format("{0} button clicked.", control.Id));
+        }
+
+        public void TemplateLibrarySettingsButtonClick(IRibbonControl control)
+        {
+            MessageBox.Show(string.Format("{0} button clicked.", control.Id));
+        }
+
+        public void AutoDocsEnterpriseSettingsButtonClick(IRibbonControl control)
+        {
+            MessageBox.Show(string.Format("{0} button clicked.", control.Id));
+        }
+
+        public void AutoDocs365SettingsButtonClick(IRibbonControl control)
+        {
+            MessageBox.Show(string.Format("{0} button clicked.", control.Id));
+        }
+
+        public void AboutAutoDocs365ButtonClick(IRibbonControl control)
+        {
+            MessageBox.Show(string.Format("{0} button clicked.", control.Id));
         }
     }
 }

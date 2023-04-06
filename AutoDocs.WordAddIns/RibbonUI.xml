@@ -1,0 +1,31 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<customUI xmlns="http://schemas.microsoft.com/office/2006/01/customui" loadImage="RibbonLoadImage">
+	<ribbon>
+		<tabs>
+			<tab id="AutoDocsThreeSixtyFive" label="AutoDocs 365">
+				<group id="ContentLibrary" label="Content Library" getVisible ="IsContentLibraryVisible">
+					<button id="SearchContentLibraryButton" label="Search Library" imageMso ="ReuseFilesForLink" size="large" onAction="SearchContentLibraryButtonClick"/>
+					<button id="SubmitContentLibraryButton" label="Submit Content" imageMso ="SaveSelectionToAutoTextGallery" size="large" onAction="SubmitContentLibraryButtonClick"/>
+					<button id="ContentManagementContentLibraryButton" label="Content Management" imageMso ="Paste" size="large" onAction="ContentManagementContentLibraryButtonClick"/>
+					<button id="ContentLibrarySettingsButton" label="Settings" imageMso ="AddInManager" size="large" onAction="ContentLibrarySettingsButtonClick"/>
+				</group>
+				<group id="TemplateLibrary" label="Automation Template Library" getVisible ="IsTemplateLibraryVisible">
+					<button id="SearchTemplateLibraryButton" label="Create Document" imageMso ="ReuseFilesForLink" size="large" onAction="SearchTemplateLibraryButtonClick"/>
+					<button id="InsertDataField" label ="Insert Data Field" size ="large" imageMso="FieldInsert" onAction="TemplateLibraryInsertDataField"/>
+					<button id="ConditionalContent" label ="Conditional Content" size ="large" imageMso="TableFormulaDialog" onAction ="TemplateLibraryConditionalContent" />
+					<button idQ="BookmarkInsert" label ="Insert Bookmark" size ="large" imageMso="BookmarkInsert" />
+					<button id="ContentManagementTemplateLibraryButton" label="Content Management" imageMso ="Paste" size="large" onAction="ContentManagementTemplateLibraryButtonClick"/>
+					<button id="TemplateLibrarySettingsButton" label="Settings" imageMso ="AddInManager" size="large" onAction="TemplateLibrarySettingsButtonClick"/>
+				</group>
+				<group id="AutoDocsEnterprise" label="AutoDocs 365 Enterprise" getVisible ="IsAutoDocsEnterpriseVisible">
+					<button id="sectionSymbol" label="Section Symbol" image="section16x16.png" onAction="InsertSectionSymbolClick" />
+					<button id="AutoDocsEnterpriseSettingsButton" label="Settings" imageMso ="AddInManager" size="large" onAction="AutoDocsEnterpriseSettingsButtonClick"/>
+				</group>
+				<group id="AutoDocs365Administration" label="AutoDocs 365 Administration" getVisible ="IsAutoDocs365Admin">
+					<button id="AutoDocs365SettingsButton" label="Settings" imageMso ="AddInManager" size="large" onAction="AutoDocs365SettingsButtonClick"/>
+					<button id="AutoDocs365AboutButton" label="About" imageMso="AdvertisePublishAs" size="large" onAction="AboutAutoDocs365ButtonClick" />
+				</group>
+			</tab>
+		</tabs>
+	</ribbon>
+</customUI>

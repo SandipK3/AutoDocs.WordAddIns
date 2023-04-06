@@ -1,6 +1,5 @@
 ﻿using NetOffice.OfficeApi;
 using NetOffice.OfficeApi.Enums;
-using NetOffice.WordApi;
 using System;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
