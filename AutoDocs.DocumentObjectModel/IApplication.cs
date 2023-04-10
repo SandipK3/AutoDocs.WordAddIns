@@ -1,0 +1,19 @@
+﻿namespace NorseTechnologies.AutoDocs.DocumentObjectModel
+{
+    public interface IApplication
+    {
+        ///////////////////////////////////////////////////////////////////////
+        // Application Properties
+        ///////////////////////////////////////////////////////////////////////
+        IDocuments Documents { get; set; }
+
+        ///////////////////////////////////////////////////////////////////////
+        // Application Methods
+        ///////////////////////////////////////////////////////////////////////
+        IDocument ActiveDocument { get; }
+        void Initialize(object wordApplication);
+
+        IDocument GetScrapDocument();
+        void ReleaseScrapDocument();
+    }
+}

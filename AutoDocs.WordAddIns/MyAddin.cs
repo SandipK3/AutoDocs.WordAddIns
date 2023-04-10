@@ -5,6 +5,7 @@ using NetOffice.Tools;
 using NetOffice.WordApi;
 using NetOffice.WordApi.Enums;
 using NetOffice.WordApi.Tools;
+using NorseTechnologies.AutoDocs.DocumentObjectModel;
 using System;
 using System.Drawing;
 using System.Runtime.InteropServices;
@@ -26,6 +27,7 @@ namespace AutoDocs.WordAddIns
         private static readonly string _prodId = "AutoDocs.TaskPaneAddin";
         ICTPFactory _ctpFactory = null;
         _CustomTaskPane taskPane = null;
+        IApplication AutoDocsApplication { get; set; }
 
         private static Word.Application _wordApplication;
         internal static Word.Application WordApplication { get { return _wordApplication; } }
@@ -57,6 +59,8 @@ namespace AutoDocs.WordAddIns
             WordApplication.DocumentBeforeCloseEvent += WordApplication_DocumentBeforeCloseEvent;
             WordApplication.DocumentBeforePrintEvent += WordApplication_DocumentBeforePrintEvent;
             WordApplication.DocumentSyncEvent += WordApplication_DocumentSyncEvent;
+            AutoDocsApplication = new NorseTechnologies.AutoDocs.MicrosoftWordDOM.Application();
+            AutoDocsApplication.Initialize(_wordApplication);
         }
 
         private void WordApplication_DocumentSyncEvent(Document doc, MsoSyncEventType syncEventType)
@@ -74,6 +78,7 @@ namespace AutoDocs.WordAddIns
         private void WordApplication_DocumentChangeEvent()
         {
             CreateAutoDocs365TaskPane(); // Create an AutoDocs 365 Custom Task Pane if one doesn't already exist
+            IDocument activeDocument = AutoDocsApplication.ActiveDocument;
         }
 
         private void WordApplication_DocumentOpenEvent(Document doc)
